@@ -1,0 +1,5 @@
+{% for element in returning_query %}
+    {% with render_self=True, oob=(not element.issuer) %}
+        {% include components[element.component] %}
+    {% endwith %}
+{% endfor %}

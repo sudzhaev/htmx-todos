@@ -1,0 +1,16 @@
+<form id="todo_{{ todo.id }}_edit"
+      class=""
+      data-id="todo_{{ todo.id }}"
+      data-component="todo-view-edit"
+      data-returning-component="todo-view"
+        {% if oob %} hx-swap-oob="innerHTML" {% endif %}
+      hx-patch="/todos/{{ todo.id }}"
+      hx-swap="outerHTML">
+    <input type="text" name="name" value="{{ todo.name }}" autofocus="autofocus"/>
+    <input type="submit" value="Update"/>
+    <input type="button"
+           value="Never mind"
+           hx-get="/todos/{{ todo.id }}/edit/close"
+           hx-swap="outerHTML"
+           hx-target="#todo_{{ todo.id }}_edit"/>
+</form>

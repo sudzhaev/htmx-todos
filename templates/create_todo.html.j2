@@ -1,0 +1,6 @@
+<div hx-swap-oob="beforeend:#todo-list">
+    {% from 'todo_list_item.html.j2' import todo_list_item %}
+    {{ todo_list_item(todo) }}
+</div>
+
+{% include 'new_todo.html.j2' %}

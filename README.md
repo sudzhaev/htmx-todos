@@ -1,0 +1,1 @@
+Playing around with [HTMX](https://htmx.org/) and implementing state management on a backend

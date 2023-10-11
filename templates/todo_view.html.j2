@@ -1,0 +1,15 @@
+{% macro todo_view(todo, oob=False) %}
+    <div id="todo_{{ todo.id }}"
+         class="todo-view"
+         data-id="todo_{{ todo.id }}"
+         {% if oob %} hx-swap-oob="outerHTML" {% endif %}
+         data-component="todo-view">
+        <h2>{{ todo.name }}</h2>
+        <h3>{{ todo.status() }}</h3>
+        <button hx-get="/todos/{{ todo.id }}/edit" hx-swap="outerHTML" hx-target="#todo_{{ todo.id }}">Edit</button>
+    </div>
+{% endmacro %}
+
+{% if render_self %}
+    {{ todo_view(todo, oob) }}
+{% endif %}

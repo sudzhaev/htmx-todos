@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Todos</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"
+            integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+            crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.11"></script>
+
+    <style>
+        * {
+            font-size: 18pt;
+        }
+
+        body {
+            margin-left: 30px;
+        }
+
+        .todo-list {
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .todo-list-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 4px;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .todo-list-item.selected {
+            background-color: #c4c3c3;
+        }
+        .todo-list-item.selected:hover {
+            background-color: #c4c3c3;
+        }
+
+        .todo-list-item + .todo-list-item {
+            border-top: solid thin #ccc;
+        }
+
+        .todo-list-item:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .todo-list-item-name {
+            flex-grow: 1;
+            text-align: start;
+        }
+
+        .root {
+            display: flex;
+        }
+
+        .todo-list-wrapper {
+            flex-grow: 1;
+        }
+
+        .todo-view {
+            border: solid thin black;
+            padding: 20px;
+            min-width: 250px;
+        }
+    </style>
+
+    <script type="application/javascript">
+        document.addEventListener('htmx:configRequest', (event) => {
+            let dataId = event.target.getAttribute('data-id');
+            let header = []
+            document.querySelectorAll(`[data-id=${dataId}]`).forEach(node => {
+                let issuer = node === event.target
+                let component = issuer
+                    ? node.getAttribute('data-returning-component')
+                    : node.getAttribute('data-component');
+                header.push({
+                    id: node.id,
+                    issuer: issuer,
+                    component: component,
+                })
+            });
+            event.detail.headers['X-DATA'] = JSON.stringify(header)
+        });
+    </script>
+</head>
+
+<body hx-boost="true">
+<div class="root">
+    <div class="todo-list-wrapper">
+        <div id="todo-list" class="todo-list">
+            {% from 'todo_list_item.html.j2' import todo_list_item %}
+            {% for todo in todos %}
+                {{ todo_list_item(todo, selected=todo.id==current_todo.id) }}
+            {% endfor %}
+        </div>
+
+        {% include 'new_todo_button.html.j2' %}
+    </div>
+    <div id="todo-sidebar">
+        {% if current_todo %}
+            {% from 'todo_view.html.j2' import todo_view %}
+            {{ todo_view(current_todo) }}
+        {% endif %}
+    </div>
+</div>
+</body>
+
+</html>
