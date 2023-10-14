@@ -92,19 +92,19 @@
 <div class="root">
     <div class="todo-list-wrapper">
         <div id="todo-list" class="todo-list">
-            {% from 'todo_list_item.html.j2' import todo_list_item %}
+            {% import 'list/item.html.j2' as list_item %}
             {% for todo in todos %}
                 {% set todo_selected = todo.id == current_todo.id if current_todo else False %}
-                {{ todo_list_item(todo, selected=todo_selected) }}
+                {{ list_item.render(todo, selected=todo_selected) }}
             {% endfor %}
         </div>
 
-        {% include 'new_todo_button.html.j2' %}
+        {% include 'list/new_todo_button.html.j2' %}
     </div>
     <div id="todo-sidebar">
         {% if current_todo %}
-            {% from 'todo_view.html.j2' import todo_view %}
-            {{ todo_view(current_todo) }}
+            {% import 'todo/todo.html.j2' as todo %}
+            {{ todo.render(current_todo) }}
         {% endif %}
     </div>
 </div>

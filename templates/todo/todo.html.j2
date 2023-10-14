@@ -1,4 +1,4 @@
-{% macro todo_view(todo, oob=False) %}
+{% macro render(todo, oob=False) %}
     <div id="todo_{{ todo.id }}"
          class="todo-view"
          data-id="todo_{{ todo.id }}"
@@ -11,5 +11,5 @@
 {% endmacro %}
 
 {% if render_self %}
-    {{ todo_view(todo, oob) }}
+    {{ render(todo, oob) }}
 {% endif %}

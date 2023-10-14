@@ -1,4 +1,4 @@
-{% macro todo_list_item(todo, oob=False) %}
+{% macro render(todo, oob=False) %}
     <div id="todolist_item_{{ todo.id }}"
          class="todo-list-item{% if kwargs['selected'] == True %} selected{% endif %}"
          {% if oob %} hx-swap-oob="innerHTML" {% endif %}
@@ -7,7 +7,8 @@
         <div class="todo-list-item-name"
              hx-get="/todolist/item/{{ todo.id }}"
              hx-trigger="click"
-             hx-swap="none"
+             hx-swap="innerHTML"
+             hx-target="#todo-sidebar"
              hx-push-url="true"
              _="on click remove .selected from .selected add .selected to closest .todo-list-item">{{ todo.name }}</div>
         <div class="todo-list-item-status">{{ todo.status() }}</div>
@@ -22,5 +23,5 @@
 {% endmacro %}
 
 {% if render_self %}
-    {{ todo_list_item(todo, oob) }}
+    {{ render(todo, oob) }}
 {% endif %}
