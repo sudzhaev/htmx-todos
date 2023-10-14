@@ -26,6 +26,10 @@ app.jinja_env.globals.update(
 )
 
 
+def tmpl_data():
+    return json.loads(request.headers["X-Tmpl-Data"])
+
+
 def htmx_request():
     return 'HX-Request' in request.headers
 
@@ -47,10 +51,17 @@ def update_todo(id):
     if not todo_name:
         return "name required", 400
     todo = db.update_todo(id, todo_name)
-    tmpl_data = json.loads(request.headers["X-Tmpl-Data"])
     return render_template("update_todo.html.j2",
                            todo=todo,
-                           tmpl_data=tmpl_data)
+                           tmpl_data=tmpl_data())
+
+
+@app.delete("/todos/<int:id>")
+def destroy_todo(id):
+    db.destroy_todo(id)
+    return render_template("destroy_todo.html.j2",
+                           todo_id=id,
+                           tmpl_data=tmpl_data())
 
 # todolist endpoints
 

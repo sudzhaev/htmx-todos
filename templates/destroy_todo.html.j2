@@ -1,0 +1,5 @@
+{% for tmpl_data_item in tmpl_data %}
+    {% if not tmpl_data_item.issuer %}
+        <div id="{{ tmpl_data_item.id }}" hx-swap-oob="delete"></div>
+    {% endif %}
+{% endfor %}

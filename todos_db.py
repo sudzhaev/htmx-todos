@@ -75,3 +75,9 @@ def find_todo(id):
         FROM todos
         WHERE id = ?
     """, (id,)).fetchone()
+
+
+def destroy_todo(id):
+    return cursor().execute("""
+        DELETE FROM todos WHERE id = ?
+    """, (id,))

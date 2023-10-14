@@ -70,15 +70,34 @@
     </style>
 
     <script type="application/javascript">
+        function getDataId(element) {
+            let initialElement = element;
+
+            let dataId = element.getAttribute('data-id');
+            while (!dataId && element.parentElement) {
+                element = element.parentElement
+                dataId = element.getAttribute('data-id');
+            }
+            if (dataId) {
+                return [dataId, element]
+            } else {
+                return [null, initialElement]
+            }
+        }
+
         document.addEventListener('htmx:configRequest', (event) => {
-            let dataId = event.target.getAttribute('data-id');
+            let [dataId, issuerElement] = getDataId(event.target);
+            if (!dataId) {
+                console.log('data-id attribute not found on issuer element.')
+                return;
+            }
             let tmplDataHeader = [];
             document.querySelectorAll(`[data-id=${dataId}]`).forEach(node => {
-                let issuer = node === event.target;
+                let issuer = node === issuerElement;
                 let tmpl = issuer
                     ? node.getAttribute('data-return-tmpl')
                     : node.getAttribute('data-tmpl');
-                tmplDataHeader.push({tmpl: tmpl, issuer: issuer});
+                tmplDataHeader.push({id: node.id, tmpl: tmpl, issuer: issuer});
             });
             event.detail.headers['X-Tmpl-Data'] = JSON.stringify(tmplDataHeader);
         });

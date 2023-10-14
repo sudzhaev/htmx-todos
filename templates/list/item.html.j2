@@ -1,7 +1,7 @@
 {% macro render(todo, oob=False) %}
     <div id="todolist_item_{{ todo.id }}"
          class="todo-list-item{% if kwargs['selected'] == True %} selected{% endif %}"
-         {% if oob %} hx-swap-oob="innerHTML" {% endif %}
+            {% if oob %} hx-swap-oob="innerHTML" {% endif %}
          data-id="todo_{{ todo.id }}"
          data-tmpl="{{ tmpl_name(self) }}">
         <div class="todo-list-item-name"
@@ -12,12 +12,19 @@
              hx-push-url="true"
              _="on click remove .selected from .selected add .selected to closest .todo-list-item">{{ todo.name }}</div>
         <div class="todo-list-item-status">{{ todo.status() }}</div>
-        <button class="todo-list-item-edit"
-             hx-get="/todolist/item/{{ todo.id }}/edit"
-             hx-trigger="click"
-             hx-swap="outerHTML"
-             hx-target="#todolist_item_{{ todo.id }}">
+
+        <button hx-get="/todolist/item/{{ todo.id }}/edit"
+                hx-trigger="click"
+                hx-swap="outerHTML"
+                hx-target="#todolist_item_{{ todo.id }}">
             Edit
+        </button>
+
+        <button hx-delete="/todos/{{ todo.id }}"
+                hx-trigger="click"
+                hx-swap="delete"
+                hx-target="#todolist_item_{{ todo.id }}">
+            Delete
         </button>
     </div>
 {% endmacro %}
