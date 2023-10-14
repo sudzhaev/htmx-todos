@@ -94,7 +94,8 @@
         <div id="todo-list" class="todo-list">
             {% from 'todo_list_item.html.j2' import todo_list_item %}
             {% for todo in todos %}
-                {{ todo_list_item(todo, selected=todo.id==current_todo.id) }}
+                {% set todo_selected = todo.id == current_todo.id if current_todo else False %}
+                {{ todo_list_item(todo, selected=todo_selected) }}
             {% endfor %}
         </div>
 
