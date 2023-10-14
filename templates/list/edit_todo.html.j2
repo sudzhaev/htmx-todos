@@ -1,11 +1,10 @@
 <form id="todolist_item_{{ todo.id }}_edit"
       class="todo-list-item"
       data-id="todo_{{ todo.id }}"
-      data-component="todo-list-item-edit"
-      data-returning-component="todo-list-item"
+      data-component="{{ tmpl_name(self) }}"
+      data-returning-component="{{ tmpl_name('list/item.html.j2') }}"
       {% if oob %} hx-swap-oob="innerHTML" {% endif %}
       hx-patch="/todos/{{ todo.id }}"
-      hx-select="#todolist_item_{{ todo.id }}"
       hx-swap="outerHTML">
     <input type="text" name="name" value="{{ todo.name }}" autofocus="autofocus"/>
     <input type="submit" value="Update"/>

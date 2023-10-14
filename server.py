@@ -5,12 +5,25 @@ import json
 db.init()
 app = Flask(__name__)
 
-components = {
-    'todo-list-item': 'list/item.html.j2',
-    'todo-list-item-edit': 'list/edit_todo.html.j2',
-    'todo-view': 'todo/todo.html.j2',
-    'todo-view-edit': 'todo/edit_todo.html.j2',
-}
+
+def tmpl(attr):
+    return attr.replace('--', '/').replace('-', '_') + '.html.j2'
+
+
+def tmpl_name(arg):
+    if isinstance(arg, str):
+        template_name = arg
+    else:
+        template_name = arg._TemplateReference__context.name
+
+    suffix_length = len(".html.j2")
+    return template_name[:-suffix_length].replace('/', '--').replace('_', '-')
+
+
+app.jinja_env.globals.update(
+    tmpl=tmpl,
+    tmpl_name=tmpl_name
+)
 
 
 @app.route("/")
@@ -58,8 +71,7 @@ def update_todo(id):
     returning_query = json.loads(request.headers["X-DATA"])
     return render_template("update_todo.html.j2",
                            todo=todo,
-                           returning_query=returning_query,
-                           components=components)
+                           returning_query=returning_query)
 
 
 @app.route("/todos/<int:id>/edit")

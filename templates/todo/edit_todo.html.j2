@@ -1,8 +1,8 @@
 <form id="todo_{{ todo.id }}_edit"
       class=""
       data-id="todo_{{ todo.id }}"
-      data-component="todo-view-edit"
-      data-returning-component="todo-view"
+      data-component="{{ tmpl_name(self) }}"
+      data-returning-component="{{ tmpl_name('todo/todo.html.j2') }}"
         {% if oob %} hx-swap-oob="innerHTML" {% endif %}
       hx-patch="/todos/{{ todo.id }}"
       hx-swap="outerHTML">
