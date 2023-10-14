@@ -26,44 +26,23 @@ app.jinja_env.globals.update(
 )
 
 
-@app.route("/")
+def htmx_request():
+    return 'HX-Request' in request.headers
+
+# common endpoints
+
+@app.get("/")
 def index():
     todos = db.list_todos()
     return render_template('index.html.j2', todos=todos)
 
 
-@app.route("/todolist/item/<int:id>")
-def show_todo(id):
-    todo = db.find_todo(id)
-    print(request.headers)
-    if 'HX-Request' in request.headers:
-        return render_template('todo/show_todo.html.j2', todo=todo)
-    else:
-        todos = db.list_todos()
-        return render_template('index.html.j2', todos=todos, current_todo=todo)
-
-
-@app.route("/todos/new")
-def new_todo():
-    return render_template('list/new_todo.html.j2')
-
-
-@app.route("/todos/new/close")
-def close_new_todo():
-    return render_template('list/new_todo_button.html.j2')
-
-
-@app.route("/todos", methods=["POST"])
-def create_todo():
-    todo_name = request.form["name"]
-    if not todo_name:
-        return "name required", 400
-    todo = db.create_todo(todo_name)
-    return render_template("list/create_todo.html.j2", todo=todo)
-
-
-@app.route("/todos/<int:id>", methods=["PATCH"])
+@app.patch("/todos/<int:id>")
 def update_todo(id):
+    """
+    Universal method to update todo from any place of UI.
+    Uses 'X-Tmpl-Data' header to render response
+    """
     todo_name = request.form["name"]
     if not todo_name:
         return "name required", 400
@@ -73,26 +52,58 @@ def update_todo(id):
                            todo=todo,
                            tmpl_data=tmpl_data)
 
+# todolist endpoints
 
-@app.route("/todos/<int:id>/edit")
-def edit_todo(id):
+@app.get("/todolist/item/<int:id>")
+def show_todolist_item(id):
     todo = db.find_todo(id)
-    return render_template("todo/edit_todo.html.j2", todo=todo)
+    print(request.headers)
+    if htmx_request():
+        return render_template('todo/show_todo.html.j2', todo=todo)
+    else:
+        todos = db.list_todos()
+        return render_template('index.html.j2', todos=todos, current_todo=todo)
 
 
-@app.route("/todolist/item/<int:id>/edit")
+@app.get("/todolist/item/new")
+def new_todolist_item():
+    return render_template('list/new_todo.html.j2')
+
+
+@app.get("/todolist/item/new/close")
+def close_new_todolist_item():
+    return render_template('list/new_todo_button.html.j2')
+
+
+@app.post("/todolist/item")
+def create_todolist_item():
+    todo_name = request.form["name"]
+    if not todo_name:
+        return "name required", 400
+    todo = db.create_todo(todo_name)
+    return render_template("list/create_todo.html.j2", todo=todo)
+
+
+@app.get("/todolist/item/<int:id>/edit")
 def edit_todolist_item(id):
     todo = db.find_todo(id)
     return render_template("list/edit_todo.html.j2", todo=todo)
 
 
-@app.route("/todolist/item/<int:id>/edit/close")
+@app.get("/todolist/item/<int:id>/edit/close")
 def close_edit_todolist_item(id):
     todo = db.find_todo(id)
     return render_template("list/item.html.j2", todo=todo, render_self=True)
 
+# todo endpoints
 
-@app.route("/todos/<int:id>/edit/close")
+@app.get("/todos/<int:id>/edit")
+def edit_todo(id):
+    todo = db.find_todo(id)
+    return render_template("todo/edit_todo.html.j2", todo=todo)
+
+
+@app.get("/todos/<int:id>/edit/close")
 def close_edit_todo(id):
     todo = db.find_todo(id)
     return render_template("todo/todo.html.j2", todo=todo, render_self=True)

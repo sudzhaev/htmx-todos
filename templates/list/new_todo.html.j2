@@ -1,7 +1,6 @@
-<form id="new-todo"
-      hx-post="/todos"
-      hx-swap="outerHTML">
+<form id="new-todo" hx-post="/todolist/item" hx-swap="outerHTML">
     <input type="text" name="name" autofocus="autofocus"/>
     <input type="submit" value="Create"/>
-    <input type="button" value="Never mind" hx-get="/todos/new/close" hx-swap="outerHTML" hx-target="#new-todo" />
+    <input type="button" value="Never mind"
+           hx-get="/todolist/item/new/close" hx-swap="outerHTML" hx-target="#new-todo" />
 </form>
