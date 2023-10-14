@@ -10,7 +10,7 @@
     <input type="submit" value="Update"/>
     <input type="button"
            value="Never mind"
-           hx-get="/todolist/item/{{ todo.id }}/edit/close"
+           hx-get="/list/item/{{ todo.id }}/close_edit"
            hx-swap="outerHTML"
            hx-target="#todolist_item_{{ todo.id }}_edit"/>
 </form>

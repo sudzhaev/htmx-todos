@@ -70,34 +70,27 @@
     </style>
 
     <script type="application/javascript">
-        function getDataId(element) {
-            let initialElement = element;
+        function getDataId(elt) {
+            let initialElt = elt;
 
-            let dataId = element.getAttribute('data-id');
-            while (!dataId && element.parentElement) {
-                element = element.parentElement
-                dataId = element.getAttribute('data-id');
+            let dataId = elt.getAttribute('data-id');
+            while (!dataId && elt.parentElement) {
+                elt = elt.parentElement
+                dataId = elt.getAttribute('data-id');
             }
-            if (dataId) {
-                return [dataId, element]
-            } else {
-                return [null, initialElement]
-            }
+            return dataId ? [dataId, elt] : [null, initialElt];
         }
 
         document.addEventListener('htmx:configRequest', (event) => {
-            let [dataId, issuerElement] = getDataId(event.target);
-            if (!dataId) {
-                console.log('data-id attribute not found on issuer element.')
-                return;
-            }
+            let [dataId, issuerElt] = getDataId(event.target);
+            if (!dataId) return;
             let tmplDataHeader = [];
-            document.querySelectorAll(`[data-id=${dataId}]`).forEach(node => {
-                let issuer = node === issuerElement;
+            document.querySelectorAll(`[data-id=${dataId}]`).forEach(elt => {
+                let issuer = elt === issuerElt;
                 let tmpl = issuer
-                    ? node.getAttribute('data-return-tmpl')
-                    : node.getAttribute('data-tmpl');
-                tmplDataHeader.push({id: node.id, tmpl: tmpl, issuer: issuer});
+                    ? elt.getAttribute('data-return-tmpl')
+                    : elt.getAttribute('data-tmpl');
+                tmplDataHeader.push({id: elt.id, tmpl: tmpl, issuer: issuer});
             });
             event.detail.headers['X-Tmpl-Data'] = JSON.stringify(tmplDataHeader);
         });

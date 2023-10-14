@@ -5,7 +5,7 @@
          data-id="todo_{{ todo.id }}"
          data-tmpl="{{ tmpl_name(self) }}">
         <div class="todo-list-item-name"
-             hx-get="/todolist/item/{{ todo.id }}"
+             hx-get="/list/item/{{ todo.id }}"
              hx-trigger="click"
              hx-swap="innerHTML"
              hx-target="#todo-sidebar"
@@ -13,7 +13,7 @@
              _="on click remove .selected from .selected add .selected to closest .todo-list-item">{{ todo.name }}</div>
         <div class="todo-list-item-status">{{ todo.status() }}</div>
 
-        <button hx-get="/todolist/item/{{ todo.id }}/edit"
+        <button hx-get="/list/item/{{ todo.id }}/edit"
                 hx-trigger="click"
                 hx-swap="outerHTML"
                 hx-target="#todolist_item_{{ todo.id }}">

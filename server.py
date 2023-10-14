@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import todos_db as db
 import json
 
@@ -34,9 +34,13 @@ def htmx_request():
     return 'HX-Request' in request.headers
 
 # common endpoints
-
 @app.get("/")
 def index():
+    return redirect('/list')
+
+
+@app.get("/list")
+def show_list():
     todos = db.list_todos()
     return render_template('index.html.j2', todos=todos)
 
@@ -65,28 +69,28 @@ def destroy_todo(id):
 
 # todolist endpoints
 
-@app.get("/todolist/item/<int:id>")
+@app.get("/list/item/<int:id>")
 def show_todolist_item(id):
     todo = db.find_todo(id)
     print(request.headers)
     if htmx_request():
-        return render_template('todo/show_todo.html.j2', todo=todo)
+        return render_template('todo/todo.html.j2', todo=todo, render_self=True)
     else:
         todos = db.list_todos()
         return render_template('index.html.j2', todos=todos, current_todo=todo)
 
 
-@app.get("/todolist/item/new")
+@app.get("/list/item/new")
 def new_todolist_item():
     return render_template('list/new_todo.html.j2')
 
 
-@app.get("/todolist/item/new/close")
+@app.get("/list/item/close_new")
 def close_new_todolist_item():
     return render_template('list/new_todo_button.html.j2')
 
 
-@app.post("/todolist/item")
+@app.post("/list/item")
 def create_todolist_item():
     todo_name = request.form["name"]
     if not todo_name:
@@ -95,13 +99,13 @@ def create_todolist_item():
     return render_template("list/create_todo.html.j2", todo=todo)
 
 
-@app.get("/todolist/item/<int:id>/edit")
+@app.get("/list/item/<int:id>/edit")
 def edit_todolist_item(id):
     todo = db.find_todo(id)
     return render_template("list/edit_todo.html.j2", todo=todo)
 
 
-@app.get("/todolist/item/<int:id>/edit/close")
+@app.get("/list/item/<int:id>/close_edit")
 def close_edit_todolist_item(id):
     todo = db.find_todo(id)
     return render_template("list/item.html.j2", todo=todo, render_self=True)
@@ -114,7 +118,7 @@ def edit_todo(id):
     return render_template("todo/edit_todo.html.j2", todo=todo)
 
 
-@app.get("/todos/<int:id>/edit/close")
+@app.get("/todos/<int:id>/close_edit")
 def close_edit_todo(id):
     todo = db.find_todo(id)
     return render_template("todo/todo.html.j2", todo=todo, render_self=True)
