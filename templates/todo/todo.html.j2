@@ -3,7 +3,7 @@
          class="todo-view"
          data-id="todo_{{ todo.id }}"
          {% if oob %} hx-swap-oob="outerHTML" {% endif %}
-         data-component="{{ tmpl_name(self) }}">
+         data-tmpl="{{ tmpl_name(self) }}">
         <h2>{{ todo.name }}</h2>
         <h3>{{ todo.status() }}</h3>
         <button hx-get="/todos/{{ todo.id }}/edit" hx-swap="outerHTML" hx-target="#todo_{{ todo.id }}">Edit</button>

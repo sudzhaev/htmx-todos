@@ -1,5 +1,5 @@
-{% for element in returning_query %}
-    {% with render_self=True, oob=(not element.issuer) %}
-        {% include tmpl(element.component) %}
+{% for tmpl_data_item in tmpl_data %}
+    {% with render_self=True, oob=(not tmpl_data_item.issuer) %}
+        {% include tmpl(tmpl_data_item.tmpl) %}
     {% endwith %}
 {% endfor %}

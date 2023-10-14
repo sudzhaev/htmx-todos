@@ -68,10 +68,10 @@ def update_todo(id):
     if not todo_name:
         return "name required", 400
     todo = db.update_todo(id, todo_name)
-    returning_query = json.loads(request.headers["X-DATA"])
+    tmpl_data = json.loads(request.headers["X-Tmpl-Data"])
     return render_template("update_todo.html.j2",
                            todo=todo,
-                           returning_query=returning_query)
+                           tmpl_data=tmpl_data)
 
 
 @app.route("/todos/<int:id>/edit")

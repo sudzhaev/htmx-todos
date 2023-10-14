@@ -3,7 +3,7 @@
          class="todo-list-item{% if kwargs['selected'] == True %} selected{% endif %}"
          {% if oob %} hx-swap-oob="innerHTML" {% endif %}
          data-id="todo_{{ todo.id }}"
-         data-component="{{ tmpl_name(self) }}">
+         data-tmpl="{{ tmpl_name(self) }}">
         <div class="todo-list-item-name"
              hx-get="/todolist/item/{{ todo.id }}"
              hx-trigger="click"

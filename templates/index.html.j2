@@ -35,6 +35,7 @@
         .todo-list-item.selected {
             background-color: #c4c3c3;
         }
+
         .todo-list-item.selected:hover {
             background-color: #c4c3c3;
         }
@@ -71,19 +72,15 @@
     <script type="application/javascript">
         document.addEventListener('htmx:configRequest', (event) => {
             let dataId = event.target.getAttribute('data-id');
-            let header = []
+            let tmplDataHeader = [];
             document.querySelectorAll(`[data-id=${dataId}]`).forEach(node => {
-                let issuer = node === event.target
-                let component = issuer
-                    ? node.getAttribute('data-returning-component')
-                    : node.getAttribute('data-component');
-                header.push({
-                    id: node.id,
-                    issuer: issuer,
-                    component: component,
-                })
+                let issuer = node === event.target;
+                let tmpl = issuer
+                    ? node.getAttribute('data-return-tmpl')
+                    : node.getAttribute('data-tmpl');
+                tmplDataHeader.push({tmpl: tmpl, issuer: issuer});
             });
-            event.detail.headers['X-DATA'] = JSON.stringify(header)
+            event.detail.headers['X-Tmpl-Data'] = JSON.stringify(tmplDataHeader);
         });
     </script>
 </head>
